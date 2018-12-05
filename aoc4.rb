@@ -1,8 +1,4 @@
 def generate_data(input)
-    #the data is modeled as follows
-    # a top level hash of days
-    # containing a hash of guards
-    # containing an array of minutes
     guard_hash = {}
     data = input.split("\n")
     data.sort! do |datum1, datum2| 
