@@ -39,26 +39,36 @@ end
 
 def find_parent_node
     value = @registy.keys - @is_parent.keys || @is_parent.keys - @registy.keys
-    @registy[value[0]]
+    roots = []
+    value.each do |root|
+        roots.push(@registy[root])
+    end
+    return roots
 end
 
-def print_graph(root)
-    p "b"
-    queue = root.children
+def print_graph(roots)
+    queue = []
+    queue.concat(roots)
     string = ""
-    string += root.name
-    root.complete = true
+    queue.sort!{|item1, item2| item1.name <=> item2.name}
+    backup_q = []
     while !queue.empty?
         node = queue.shift
+
         if(node.complete)
             next
         end
-        if(!node.parents)
+        if(!node.parents || node.parents.empty?)
             node.complete = true
         elsif(node.parents.all?{|parent| parent.complete == true})
             node.complete = true
         else
-            queue.push(node)
+            backup_q.push(node)
+            
+            if(queue.empty?)
+                queue.concat(backup_q)
+                backup_q = []
+            end
             next
         end
         queue.concat(node.children)
@@ -68,11 +78,3 @@ def print_graph(root)
     p string
     
 end
-
-generate_graph("Step C must be finished before step A can begin.
-    Step C must be finished before step F can begin.
-    Step A must be finished before step B can begin.
-    Step A must be finished before step D can begin.
-    Step B must be finished before step E can begin.
-    Step D must be finished before step E can begin.
-    Step F must be finished before step E can begin")
